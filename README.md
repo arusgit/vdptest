@@ -1,2 +1,1 @@
 # vdptest
-test

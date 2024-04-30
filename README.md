@@ -1,3 +1,3 @@
 # vdptest
 
-second thing
+ thing

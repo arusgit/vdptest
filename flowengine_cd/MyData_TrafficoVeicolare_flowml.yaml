@@ -1,0 +1,1510 @@
+asyncapi: 2.6.0
+info:
+  title: Radar veicolari Padova - Kafka API
+  version: 0.0.1
+  description: >-
+    Questa API consente di ricevere dati anagrafici e telemetrici che
+    caratterizzano i sensori capaci di rilevare il passaggio Fi auto, camion e
+    motocicli.
+  
+
+    ### Caratteristiche principali:
+
+
+    * Metadatazione geografica e alfanumerica 🌃 
+  
+    * Ricezione in near real-time dei conteggi oggetto di rilevazione📈  
+
+
+    ### Rappresentazione x-almaviva 
+ 
+    In questa sezione accenniamo al contenuto all'interno di x-almaviva, sezione
+    che viene definita in fondo a questo file. 
+
+    All'interno di essa vengono definite delle operazioni, che poi verranno
+    converitirte in un flusso nify da un engine che verra' scritto in seguito
+
+
+    Le operazioni sono le seguenti:
+
+    * #### JoltTransformers
+        - Si occupa di trasformare il payload che arrivano dai sensori in un dto pronto per essere manipolato
+        - Per fare queste operazioni bisogna definire dei blocchi scritti in JOLT
+        - Questa fase' in comune sia per i messaggi che verranno reinderizzati su BigData che sulla parte GIS
+    * #### Normalization
+        - Questo step si occupa di trasformare il dto creato al punto precedente nella sua versione standardizzzata come da speficiche note sui file excel di brasini martina. 
+        - Questa fase' in comune sia per i messaggi che verranno reinderizzati su BigData che sulla parte GIS
+    * #### Bigdata 
+        - Dopo i 2 step, di JoltTransformers che di Normalization il messaggio viene inviato a BigData come fonte dati
+    * #### Gis
+        - Dopo i 2 step, di JoltTransformers che di Normalization il messaggio viene inviato a Gis come fonte dati
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+defaultContentType: application/json
+servers:
+  collaudo:
+    url: 192.168.176.183:9092,192.168.176.184:9092,192.168.176.185:9092
+    protocol: kafka-secure
+    description: nodi del broker di Collaudo
+    security:
+      - saslScram: []
+  produzione:
+    url: 192.168.146.23:9092,192.168.146.24:9092,192.168.146.25:9092
+    protocol: kafka-secure
+    description: nodi del broker di Produzione
+    security:
+      - saslScram: []
+channels:
+  radar_contaveicoli_padova.{radarId}.event:
+    publish:
+      operationId: radar_contaveicoli_padova.{radarId}.event
+      summary: >-
+        I cambiamenti dei metadati ed i conteggi dei veicoli vengono pubblicati
+        in modalità asincrona
+      traits:
+        - $ref: '#/components/operationTraits/kafka'
+      message:
+        $ref: '#/components/messages/radarContaveicoliPadovaEventOccurred'
+    description: Topic contenente il payload dei radar contaveicoli a Padova
+    parameters:
+      radarId:
+        - $ref: '#/components/parameters/radarId'
+  radar_contaveicoli_vicenza.{radarId}.event:
+    publish:
+      operationId: radar_contaveicoli_vicenza.{radarId}.event
+      summary: >-
+        I cambiamenti dei metadati ed i conteggi dei veicoli vengono pubblicati
+        in modalità asincrona
+      traits:
+        - $ref: '#/components/operationTraits/kafka'
+      message:
+        $ref: '#/components/messages/radarContaveicoliVicenzaEventOccurred'
+    description: Topic contenente il payload dei radar contaveicoli a Vicenza
+    parameters:
+      radarId:
+        - $ref: '#/components/parameters/radarId'
+  radar_contaveicoli_treviso.{radarId}.event:
+    publish:
+      operationId: radar_contaveicoli_treviso.{radarId}.event
+      summary: >-
+        I cambiamenti dei metadati ed i conteggi dei veicoli vengono pubblicati
+        in modalità asincrona
+      traits:
+        - $ref: '#/components/operationTraits/kafka'
+      message:
+        $ref: '#/components/messages/radarContaveicoliTrevisoEventOccurred'
+    description: Topic contenente il payload dei radar contaveicoli a Treviso
+    parameters:
+      radarId:
+        - $ref: '#/components/parameters/radarId'
+  radar_contaveicoli_montebelluna.{radarId}.event:
+    publish:
+      operationId: radar_contaveicoli_montebelluna.{radarId}.event
+      summary: >-
+        I cambiamenti dei metadati ed i conteggi dei veicoli vengono pubblicati
+        in modalità asincrona
+      traits:
+        - $ref: '#/components/operationTraits/kafka'
+      message:
+        $ref: '#/components/messages/radarContaveicoliMontebellunaEventOccurred'
+    description: Topic contenente il payload dei radar contaveicoli a Montebelluna
+    parameters:
+      radarId:
+        - $ref: '#/components/parameters/radarId'
+  galileo_vehicles_verona.{radarId}.event:
+    publish:
+      operationId: galileo_vehicles_verona.{radarId}.event
+      summary: >-
+        I cambiamenti dei metadati ed i conteggi dei veicoli vengono pubblicati
+        in modalità asincrona
+      traits:
+        - $ref: '#/components/operationTraits/kafka'
+      message:
+        $ref: '#/components/messages/galileoVehiclesVeronaEventOccurred'
+    description: Topic contenente il payload dei sensori contaveicoli Galileo a Verona
+    parameters:
+      radarId:
+        - $ref: '#/components/parameters/radarId'
+  a2a_vehicles_treviso.{radarId}.event:
+    publish:
+      operationId: a2a_vehicles_treviso.{radarId}.event
+      summary: >-
+        I cambiamenti dei metadati ed i conteggi dei veicoli vengono pubblicati
+        in modalità asincrona
+      traits:
+        - $ref: '#/components/operationTraits/kafka'
+      message:
+        $ref: '#/components/messages/a2aVehiclesTrevisoEventOccurred'
+    description: >-
+      Topic contenente il payload dei sensori contaveicoli A2A (network server
+      a2a) a Treviso
+    parameters:
+      radarId:
+        - $ref: '#/components/parameters/radarId'
+components:
+  messages:
+    radarContaveicoliPadovaEventOccurred:
+      name: radarContaveicoliPadovaEventOccurred
+      title: Evento di cambiamento dati anagrafici e pubblicazione conteggio veicolo
+      summary: |
+        Questo e' il payload che riceviamo dalla fonte dati con i diversi campi
+        aggregati
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/radarContaveicoliPadovaPayload'
+    radarContaveicoliVicenzaEventOccurred:
+      name: radarContaveicoliVicenzaEventOccurred
+      title: Evento di cambiamento dati anagrafici e pubblicazione conteggio veicolo
+      summary: |
+        Questo e' il payload che riceviamo dalla fonte dati con i diversi campi
+        aggregati
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/radarContaveicoliVicenzaPayload'
+    radarContaveicoliTrevisoEventOccurred:
+      name: radarContaveicoliTrevisoEventOccurred
+      title: Evento di cambiamento dati anagrafici e pubblicazione conteggio veicolo
+      summary: |
+        Questo e' il payload che riceviamo dalla fonte dati con i diversi campi
+        aggregati
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/radarContaveicoliTrevisoPayload'
+    radarContaveicoliMontebellunaEventOccurred:
+      name: radarContaveicoliMontebellunaEventOccurred
+      title: Evento di cambiamento dati anagrafici e pubblicazione conteggio veicolo
+      summary: |
+        Questo e' il payload che riceviamo dalla fonte dati con i diversi campi
+        aggregati
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/radarContaveicoliMontebellunaPayload'
+    galileoVehiclesVeronaEventOccurred:
+      name: galileoVehiclesVeronaEventOccurred
+      title: Evento di cambiamento dati anagrafici e pubblicazione conteggio veicolo
+      summary: |
+        Questo e' il payload che riceviamo dalla fonte dati con i diversi campi
+        aggregati
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/galileoVehiclesVeronaPayload'
+    a2aVehiclesTrevisoEventOccurred:
+      name: a2aVehiclesTrevisoEventOccurred
+      title: Evento di cambiamento dati anagrafici e pubblicazione conteggio veicolo
+      summary: |
+        Questo e' il payload che riceviamo dalla fonte dati con i diversi campi
+        aggregati
+      contentType: application/json
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/a2aVehiclesTrevisoPayload'
+  schemas:
+    radarContaveicoliPadovaPayload:
+      type: object
+      properties:
+        data_data_timestamp_HH:
+          type: integer
+          examples:
+            - 14
+          minimum: 0
+          maximum: 23
+          description: two digits for hour expressed in range 0 - 23
+        data_data_timestamp_MM:
+          type: integer
+          examples:
+            - 32
+          minimum: 0
+          maximum: 59
+        data_data_timestamp_format:
+          type: string
+          examples:
+            - HHMM GMT
+        data_lx_avg:
+          type: integer
+          examples:
+            - 0
+        data_lx_avg_unit:
+          type: string
+          examples:
+            - Km/h
+        data_lx_cnt:
+          type: integer
+          examples:
+            - 0
+        data_lx_cnt_unit:
+          type: string
+          examples:
+            - Heavy Vehicles
+        data_pay_type:
+          type: integer
+          examples:
+            - 161
+        data_rx_avg:
+          type: integer
+          examples:
+            - 12
+        data_rx_avg_unit:
+          type: string
+          examples:
+            - Km/h
+        data_rx_cnt:
+          type: integer
+          examples:
+            - 68
+        data_rx_cnt_unit:
+          type: string
+          examples:
+            - Heavy Vehicles
+        data_sbx_batt:
+          type: integer
+          examples:
+            - 8600
+        data_sbx_batt_unit:
+          type: string
+          examples:
+            - mV
+        dr:
+          type: integer
+          examples:
+            - 0
+        fcnt:
+          type: integer
+          examples:
+            - 239
+        fport:
+          type: integer
+          examples:
+            - 17
+        deviceName:
+          type: string
+          examples:
+            - TCR-3932303170308310
+        dev_eui:
+          type: string
+          examples:
+            - '3124235345213424'
+        deviceType:
+          type: string
+          examples:
+            - TCR-EU868-HSS
+        etichetta:
+          type: string
+          examples:
+            - Albignasego via Roma vs Sud
+        latitude:
+          type: string
+          description: latitudine del sensore
+          examples:
+            - '44.3452435'
+        longitude:
+          type: string
+          description: longitudine del sensore
+          examples:
+            - '12.5623432'
+        etichetta_dx:
+          type: string
+          enum:
+            - Nord
+            - Sud
+            - Est
+            - Ovest
+          examples:
+            - Nord
+        etichetta_lx:
+          type: string
+          enum:
+            - Nord
+            - Sud
+            - Est
+            - Ovest
+          examples:
+            - Sud
+        active:
+          type: string
+          examples:
+            - 'true'
+            - 'false'
+        timestamp:
+          type: string
+          description: timestamp in formato epoch
+          examples:
+            - '1699453957570'
+    radarContaveicoliVicenzaPayload:
+      type: object
+      properties:
+        data_data_timestamp_HH:
+          type: integer
+          examples:
+            - 14
+          minimum: 0
+          maximum: 23
+          description: two digits for hour expressed in range 0 - 23
+        data_data_timestamp_MM:
+          type: integer
+          examples:
+            - 32
+          minimum: 0
+          maximum: 59
+        data_data_timestamp_format:
+          type: string
+          examples:
+            - HHMM GMT
+        data_lx_avg:
+          type: integer
+          examples:
+            - 0
+        data_lx_avg_unit:
+          type: string
+          examples:
+            - Km/h
+        data_lx_cnt:
+          type: integer
+          examples:
+            - 0
+        data_lx_cnt_unit:
+          type: string
+          examples:
+            - Heavy Vehicles
+        data_pay_type:
+          type: integer
+          examples:
+            - 161
+        data_rx_avg:
+          type: integer
+          examples:
+            - 12
+        data_rx_avg_unit:
+          type: string
+          examples:
+            - Km/h
+        data_rx_cnt:
+          type: integer
+          examples:
+            - 68
+        data_rx_cnt_unit:
+          type: string
+          examples:
+            - Heavy Vehicles
+        data_sbx_batt:
+          type: integer
+          examples:
+            - 8600
+        data_sbx_batt_unit:
+          type: string
+          examples:
+            - mV
+        dr:
+          type: integer
+          examples:
+            - 0
+        fcnt:
+          type: integer
+          examples:
+            - 239
+        fport:
+          type: integer
+          examples:
+            - 17
+        deviceName:
+          type: string
+          examples:
+            - TCR-3932303170308310
+        dev_eui:
+          type: string
+          examples:
+            - 32334252c591a23
+        deviceType:
+          type: string
+          examples:
+            - TCR-EU868-HSS
+        etichetta:
+          type: string
+          examples:
+            - Albignasego via Roma vs Sud
+        latitude:
+          type: string
+          description: latitudine del sensore
+          examples:
+            - '44.3452435'
+        longitude:
+          type: string
+          description: longitudine del sensore
+          examples:
+            - '12.5623432'
+        etichetta_dx:
+          type: string
+          enum:
+            - Nord
+            - Sud
+            - Est
+            - Ovest
+          examples:
+            - Nord
+        etichetta_lx:
+          type: string
+          enum:
+            - Nord
+            - Sud
+            - Est
+            - Ovest
+          examples:
+            - Sud
+        active:
+          type: string
+          description: stato di funzionamento del sensore
+          examples:
+            - 'true'
+            - 'false'
+        timestamp:
+          type: string
+          description: timestamp in formato epoch
+          examples:
+            - '1699453957570'
+    radarContaveicoliTrevisoPayload:
+      type: object
+      properties:
+        data_data_timestamp_HH:
+          type: integer
+          examples:
+            - 14
+          minimum: 0
+          maximum: 23
+          description: two digits for hour expressed in range 0 - 23
+        data_data_timestamp_MM:
+          type: integer
+          examples:
+            - 32
+          minimum: 0
+          maximum: 59
+        data_data_timestamp_format:
+          type: string
+          examples:
+            - HHMM GMT
+        data_lx_avg:
+          type: integer
+          examples:
+            - 0
+        data_lx_avg_unit:
+          type: string
+          examples:
+            - Km/h
+        data_lx_cnt:
+          type: integer
+          examples:
+            - 0
+        data_lx_cnt_unit:
+          type: string
+          examples:
+            - Heavy Vehicles
+        data_pay_type:
+          type: integer
+          examples:
+            - 161
+        data_rx_avg:
+          type: integer
+          examples:
+            - 12
+        data_rx_avg_unit:
+          type: string
+          examples:
+            - Km/h
+        data_rx_cnt:
+          type: integer
+          examples:
+            - 68
+        data_rx_cnt_unit:
+          type: string
+          examples:
+            - Heavy Vehicles
+        data_sbx_batt:
+          type: integer
+          examples:
+            - 8600
+        data_sbx_batt_unit:
+          type: string
+          examples:
+            - mV
+        dr:
+          type: integer
+          examples:
+            - 0
+        fcnt:
+          type: integer
+          examples:
+            - 239
+        fport:
+          type: integer
+          examples:
+            - 17
+        deviceName:
+          type: string
+          examples:
+            - TCR-3932303170308310
+        dev_eui:
+          type: string
+          examples:
+            - 32334252c591a23
+        deviceType:
+          type: string
+          examples:
+            - TCR-EU868-HSS
+        etichetta:
+          type: string
+          examples:
+            - Albignasego via Roma vs Sud
+        latitude:
+          type: string
+          description: latitudine del sensore
+          examples:
+            - '44.3452435'
+        longitude:
+          type: string
+          description: longitudine del sensore
+          examples:
+            - '12.5623432'
+        etichetta_dx:
+          type: string
+          enum:
+            - Nord
+            - Sud
+            - Est
+            - Ovest
+          examples:
+            - Nord
+        etichetta_lx:
+          type: string
+          enum:
+            - Nord
+            - Sud
+            - Est
+            - Ovest
+          examples:
+            - Sud
+        active:
+          type: string
+          description: stato di funzionamento del sensore
+          examples:
+            - 'true'
+            - 'false'
+        timestamp:
+          type: string
+          description: timestamp in formato epoch
+          examples:
+            - '1699453957570'
+    radarContaveicoliMontebellunaPayload:
+      type: object
+      properties:
+        data_data_timestamp_HH:
+          type: integer
+          examples:
+            - 14
+          minimum: 0
+          maximum: 23
+          description: two digits for hour expressed in range 0 - 23
+        data_data_timestamp_MM:
+          type: integer
+          examples:
+            - 32
+          minimum: 0
+          maximum: 59
+        data_data_timestamp_format:
+          type: string
+          examples:
+            - HHMM GMT
+        data_lx_avg:
+          type: integer
+          examples:
+            - 0
+        data_lx_avg_unit:
+          type: string
+          examples:
+            - Km/h
+        data_lx_cnt:
+          type: integer
+          examples:
+            - 0
+        data_lx_cnt_unit:
+          type: string
+          examples:
+            - Heavy Vehicles
+        data_pay_type:
+          type: integer
+          examples:
+            - 161
+        data_rx_avg:
+          type: integer
+          examples:
+            - 12
+        data_rx_avg_unit:
+          type: string
+          examples:
+            - Km/h
+        data_rx_cnt:
+          type: integer
+          examples:
+            - 68
+        data_rx_cnt_unit:
+          type: string
+          examples:
+            - Heavy Vehicles
+        data_sbx_batt:
+          type: integer
+          examples:
+            - 8600
+        data_sbx_batt_unit:
+          type: string
+          examples:
+            - mV
+        dr:
+          type: integer
+          examples:
+            - 0
+        fcnt:
+          type: integer
+          examples:
+            - 239
+        fport:
+          type: integer
+          examples:
+            - 17
+        deviceName:
+          type: string
+          examples:
+            - TCR-3932303170308310
+        dev_eui:
+          type: string
+          examples:
+            - 32334252c591a23
+        deviceType:
+          type: string
+          examples:
+            - TCR-EU868-HSS
+        etichetta:
+          type: string
+          examples:
+            - Albignasego via Roma vs Sud
+        latitude:
+          type: string
+          description: latitudine del sensore
+          examples:
+            - '44.3452435'
+        longitude:
+          type: string
+          description: longitudine del sensore
+          examples:
+            - '12.5623432'
+        etichetta_dx:
+          type: string
+          enum:
+            - Nord
+            - Sud
+            - Est
+            - Ovest
+          examples:
+            - Nord
+        etichetta_lx:
+          type: string
+          enum:
+            - Nord
+            - Sud
+            - Est
+            - Ovest
+          examples:
+            - Sud
+        active:
+          type: string
+          description: stato di funzionamento del sensore
+          examples:
+            - 'true'
+            - 'false'
+        timestamp:
+          type: string
+          description: timestamp in formato epoch
+          examples:
+            - '1699453957570'
+    galileoVehiclesVeronaPayload:
+      type: object
+    a2aVehiclesTrevisoPayload:
+      type: object
+      properties:
+        id:
+          type: string
+          description: id del sensore
+          example: dbe2e5f1-8e29-4735-b594-de1b1ab8e3c2
+        name:
+          type: string
+          description: nome della postazione
+          example: Ponte Garibaldi - pista ciclabile
+        organizationKey:
+          type: string
+          example: comune-treviso
+        groupId:
+          type: integer
+          example: 13
+        brandId:
+          type: integer
+          example: 43
+        modelId:
+          type: integer
+          example: 311
+        typeId:
+          type: integer
+          example: 34
+        devEui:
+          type: string
+          example: 343531317e30720a
+        description:
+          type: string
+          description: descrizione tipologia sensore
+          example: Monitoraggio del traffico - bici e pedoni
+        serial:
+          type: string
+        position_latitude:
+          type: number
+          description: latitudine
+          example: 45.663274
+        position_longitude:
+          type: number
+          description: longitudine
+          example: 12.252355
+        address:
+          type: string
+          descrizione: indirizzo del sensore
+          example: Piazza Giuseppe Garibaldi, 14, 31100 Treviso TV, Italia
+        group:
+          type: string
+          example: City
+        type:
+          type: string
+          example: Mobility
+        brand:
+          type: string
+          example: parametric
+        brandEncoded:
+          type: string
+          example: parametric
+        model:
+          type: string
+          example: Traffic Sensor
+        modelEncoded:
+          type: string
+          example: TCR
+        lastMeasurementAt:
+          type: string
+          example: '2023-12-19T09:24:08.140Z'
+        createdAt:
+          type: string
+          example: '2023-05-17T15:17:22.684Z'
+        public:
+          type: boolean
+          example: true
+        hidden:
+          type: boolean
+          example: false
+        measure_0_timestamp:
+          type: string
+          description: timestamp
+          example: '2023-12-19T09:24:08.140Z'
+        measure_0_payload_LTR2Count:
+          type: integer
+          description: conteggio dei transiti
+          example: 37
+        measure_0_payload_RTL2Count:
+          type: integer
+          description: conteggio dei transiti
+          example: 37
+        measure_0_payload_LTR2Speed:
+          type: integer
+          description: velocita' media
+          example: 6
+        measure_0_payload_RTL2Speed:
+          type: integer
+          description: velocita' media
+          example: 6
+        measure_0_payload_LTR3Count:
+          type: integer
+          description: conteggio dei transiti
+          example: 37
+        measure_0_payload_RTL3Count:
+          type: integer
+          description: conteggio dei transiti
+          example: 18
+        measure_0_payload_RTL3Speed:
+          type: integer
+          description: velocita' media
+          example: 4
+        measure_0_payload_LTR3Speed:
+          type: integer
+          description: velocita' media
+          example: 4
+        measure_0_payload_batteryVoltage:
+          type: integer
+          example: 8
+        deviceName:
+          type: string
+          description: nome sensore IoT
+          example: A2a_dbe2e5f1-8e29-4735-b594-de1b1ab8e3c2
+        deviceType:
+          type: string
+          description: tipologia sensore IoT
+          example: default
+        etichetta:
+          type: string
+          description: nome postazione
+          example: Ponte Garibaldi - pista ciclabile
+        active:
+          type: string
+          description: stato attivazione del sensore
+          example: 'true'
+        timestamp:
+          type: string
+          description: timestamp
+          example: '2023-12-19T09:24:08.140Z'
+  securitySchemes:
+    saslScram:
+      type: scramSha256
+      description: Provide your username and password for SASL/SCRAM authentication
+  parameters:
+    radarId:
+      description: The ID of the streetlight.
+  messageTraits:
+    commonHeaders:
+      headers:
+        type: object
+        properties:
+          Timestamp:
+            type: string
+            format: date-time
+            examples:
+              - '2023-11-08T14:33:56.977Z'
+          Topic:
+            type: string
+            examples:
+              - traffic_cam_padova
+          Partition:
+            type: integer
+          SchemaId:
+            type: integer
+          SchemaType:
+            type: string
+          Key:
+            type: string
+          Headers:
+            type: string
+  operationTraits:
+    kafka:
+      bindings:
+        kafka:
+          clientId:
+            type: string
+            enum:
+              - traffic_cam_padova_anagrafica_listener
+          groupId:
+            type: string
+            enum:
+              - traffic_cam_padova_anagrafica_groupid_4
+x-AlmavivA:
+  normalization:
+    joltTransformers:
+      jolt_radar_contaveicoli_padova:
+        description: >-
+          Specifica Jolt per normalizzare i dati del flusso
+          radar_contaveicoli_padova
+        jolt_transformation_type: chain
+        definition: |
+          [
+            {
+              "operation": "shift",
+              "spec": {"Message": {
+                  "deviceName": "deviceName (PK)",
+                  "dev_eui": "sensorId",
+                  "etichetta": "deviceLabel",
+                  "deviceType": "deviceType",
+                  "timestamp": "timestamp",
+                  "data_rx_cnt_unit": "vehicleClass",   
+                  "data_rx_cnt": "transitCount", 
+                  "data_lx_cnt_unit": "vehicleClass",   
+                  "data_lx_cnt": "transitCount", 
+                  "etichetta_dx": "direction",
+                  "etichetta_lx": "direction",
+                  "latitude": "latitude",
+                  "longitude": "longitude",
+                  "active": "status",
+                  "etichetta_dx": "directionDescription",
+                  "etichetta_lx": "directionDescription",
+                  "data_rx_avg": "speed",
+                  "data_rx_avg_unit": "speedUnit",
+                  "data_lx_avg": "speed",
+                  "data_lx_avg_unit": "speedUnit",
+                  "*":"extraData_&"
+                }
+              }
+            }, 
+            {
+              "operation": "default",
+              "spec": {
+                "operator": "fornitore del sensore",
+                "aggregation": true,
+                "sensorClass": "sensore contaveicoli aggregato"
+              }
+            },
+            {
+            "operation": "sort",
+            "spec": {}
+            }
+          ]
+      jolt_radar_contaveicoli_vicenza:
+        description: >-
+          Specifica Jolt per normalizzare i dati del flusso
+          radar_contaveicoli_vicenza
+        jolt_transformation_type: chain
+        definition: |
+          [{
+            "operation": "shift",
+            "spec": {
+              "Message": {
+                "deviceName": "deviceName (PK)",
+                "active": "status",
+                "etichetta": "deviceLabel",
+                "deviceType": "deviceType",
+                "timestamp": "timestamp",
+                "data_rx_cnt_unit": "vehicleClass",
+                "data_rx_cnt": "transitCount",
+                "data_lx_cnt_unit": "vehicleClass",
+                "data_lx_cnt": "transitCount",
+                "etichetta_dx": "direction",
+                "etichetta_lx": "direction",
+                "latitude": "latitude",
+                "longitude": "longitude",
+                "dev_eui": "sensorId",
+                "active": "status",
+                "data_rx_avg": "speed",
+                "data_rx_avg_unit": "speedUnit",
+                "data_lx_avg": "speed",
+                "data_lx_avg_unit": "speedUnit",
+                "*": "extraSource_&"
+              }
+            }
+          }, {
+            "operation": "default",
+            "spec": {
+              "operator": "fornitore del sensore",
+              "aggregation": true,
+              "sensorClass": "sensore contaveicoli aggregato"
+            }
+          }, {
+            "operation": "sort",
+            "spec": {}
+          }]
+      jolt_radar_contaveicoli_treviso:
+        description: >-
+          Specifica Jolt per normalizzare i dati del flusso
+          radar_contaveicoli_treviso
+        jolt_transformation_type: chain
+        definition: |
+          [{
+          "operation": "shift",
+          "spec": {
+            "Message": {
+              "active": "status",
+              "deviceName": "deviceName (PK)",
+              "dev_eui": "sensorId",
+              "deviceType": "deviceType",
+              "latitude": "latitude",
+              "longitude": "longitude",
+              "timestamp": "timestamp",
+              "data_rx_cnt_unit": "vehicleClass",
+              "data_rx_cnt": "transitCount",
+              "etichetta_dx": "direction",
+              "data_lx_cnt_unit": "vehicleClass",
+              "data_lx_cnt": "transitCount",
+              "etichetta_lx": "direction",            
+              "etichetta_dx": "directionDescription",
+              "data_rx_avg": "speed",
+              "data_rx_avg_unit": "speedUnit",                
+              "etichetta_lx": "directionDescription",
+              "data_lx_avg": "speed",
+              "data_lx_avg_unit": "speedUnit",
+              "*": "extraData_&"
+            }
+          }
+          }, {
+            "operation": "default",
+            "spec": {
+              "operator": "fornitore del sensore",
+              "deviceLabel": "etichetta del sensore",
+              "aggregation": true,
+              "sensorClass": "sensore contaveicoli aggregato"
+            }
+          }, {
+            "operation": "sort",
+            "spec": {}
+          }]
+      jolt_radar_contaveicoli_montebelluna:
+        description: >-
+          Specifica Jolt per normalizzare i dati del flusso
+          radar_contaveicoli_montebelluna
+        jolt_transformation_type: chain
+        definition: |
+          [{
+          "operation": "shift",
+          "spec": {
+            "Message": {
+              "active": "status",
+              "deviceName": "deviceName (PK)",
+              "dev_eui": "sensorId",
+              "deviceType": "deviceType",
+              "etichetta": "deviceLabel",
+              "latitude": "latitude",
+              "longitude": "longitude",
+              "timestamp": "timestamp",
+              "data_rx_cnt_unit": "vehicleClass",
+              "data_rx_cnt": "transitCount",
+              "etichetta_dx": "direction",
+              "data_lx_cnt_unit": "vehicleClass",
+              "data_lx_cnt": "transitCount",
+              "etichetta_lx": "direction",
+              "etichetta_dx": "directionDescription",
+              "data_rx_avg": "speed",
+              "data_rx_avg_unit": "speedUnit",
+              "etichetta_lx": "directionDescription",
+              "data_lx_avg": "speed",
+              "data_lx_avg_unit": "speedUnit",
+              "*": "extraData_&"
+            }
+          }
+          }, {
+            "operation": "default",
+            "spec": {
+              "operator": "fornitore del sensore",
+              "aggregation": true,
+              "sensorClass": "sensore contaveicoli aggregato"
+            }
+          }, {
+            "operation": "sort",
+            "spec": {}
+          }]
+      jolt_galileo_vehicles_verona:
+        description: >-
+          Specifica Jolt per normalizzare i dati del flusso
+          galileo_vehicles_verona
+        jolt_transformation_type: chain
+        definition: |
+          [{
+            "operation": "shift",
+            "spec": {
+              "Message": {
+                "deviceName": "deviceName (PK)",
+                "name": "deviceLabel",
+                "deviceType": "deviceType",
+                "timestamp": "timestamp",
+                "transitCount": "transitCount",
+                "data_direction_value": "direction",
+                "vehicleClass": "vehicleClass",
+                "deviceLocation_latitude": "latitude",
+                "deviceLocation_longitude": "longitude",
+                "dev_eui": "sensorId",
+                "online": "status",
+                "data_direction_value": "directionDescription",
+                "data_busses_value": "transitCount",
+                "data_cars_value": "transitCount",
+                "data_motorcycles_value": "transitCount",
+                "data_trucks_value": "transitCount",
+                "data_type_value": "data_type_value",
+                "*": "extraSource_&"
+              }
+            }
+          }, {
+            "operation": "default",
+            "spec": {
+              "operator": "fornitore del sensore",
+              "aggregation": true,
+              "sensorClass": "sensore contaveicoli aggregato",
+              "speed": 0,
+              "speedUnit": "KM/H"
+            }
+          }, {
+            "operation": "sort",
+            "spec": {}
+          }]         
+      jolt_a2a_vehicles_treviso:
+        description: Specifica Jolt per normalizzare i dati del flusso a2a_vehicles_treviso
+        jolt_transformation_type: chain
+        definition: |
+          [{
+            "operation": "shift",
+            "spec": {
+              "Message": {
+                "active": "status",
+                "deviceName": "deviceName (PK)",
+                "id": "sensorId",
+                "deviceType": "deviceType",
+                "description": "sensorClass",
+                "etichetta": "deviceLabel",
+                "position_latitude": "latitude",
+                "position_longitude": "longitude",
+                "timestamp": "timestamp",
+                "measure_0_payload_LTR3Count": "transitCount",
+                "measure_0_payload_LTR2Count": "transitCount",
+                      "measure_0_payload_RTL3Count": "transitCount",
+                "measure_0_payload_RTL2Count": "transitCount",
+                "measure_0_payload_LTR3Speed": "speed",
+                "measure_0_payload_LTR2Speed": "speed",
+                      "measure_0_payload_RTL3Speed": "speed",
+                "measure_0_payload_RTL2Speed": "speed",
+                "*": "extraData_&"
+              }
+            }
+            }, {
+              "operation": "default",
+              "spec": {
+                "operator": "fornitore del sensore",
+                "aggregation": true,            
+                "speedUnit": "KM/H",
+                "direction": "direction",
+                "directionDescription": "directionDescription"
+              }
+            }, {
+            "operation": "sort",
+            "spec": {}
+          }]
+    mapping:
+      mapping_radar_contaveicoli_padova:
+        message_schema:
+          $ref: '#/components/messages/radarContaveicoliPadovaEventOccurred'
+        filter_parameters:
+          data_lx_cnt_unit: Two Wheelers
+          data_rx_cnt_unit: Two Wheelers
+        split_parameters:
+          - - data_lx_cnt_unit
+            - data_lx_cnt
+            - etichetta_lx
+          - - data_rx_cnt_unit
+            - data_rx_cnt
+            - etichetta_dx
+        jolt_normalizer:
+          $ref: >-
+            #/x-AlmavivA/normalization/joltTransformers/jolt_radar_contaveicoli_padova
+      mapping_galileo_vehicles_verona:
+        message_schema:
+          $ref: '#/components/messages/galileoVehiclesVeronaEventOccurred'
+        filter_parameters:
+          data_type_value: Vehicles
+        split_parameters:
+          - data_cars_value
+          - data_trucks_value
+          - data_busses_value
+          - data_motorcycles_value
+        jolt_normalizer:
+          $ref: >-
+            #/x-AlmavivA/normalization/joltTransformers/jolt_galileo_vehicles_verona
+      mapping_radar_contaveicoli_vicenza:
+        message_schema:
+          $ref: '#/components/messages/radarContaveicoliVicenzaEventOccurred'
+        filter_parameters: {}
+        split_parameters:
+          - - data_rx_cnt_unit
+            - data_rx_cnt
+            - data_rx_avg
+            - data_rx_avg_unit
+            - etichetta_dx
+          - - data_lx_cnt_unit
+            - data_lx_cnt
+            - data_lx_avg
+            - data_lx_avg_unit
+            - etichetta_lx
+        jolt_normalizer:
+          $ref: >-
+            #/x-AlmavivA/normalization/joltTransformers/jolt_radar_contaveicoli_vicenza
+      mapping_a2a_vehicles_treviso:
+        message_schema:
+          $ref: '#/components/messages/a2aVehiclesTrevisoEventOccurred'
+        filter_parameters:
+          measure_0_payload_LTR2Count: true
+          measure_0_payload_RTL2Count: true
+          measure_0_payload_LTR3Count: true
+          measure_0_payload_RTL3Count: true
+        split_parameters:
+          - measure_0_payload_LTR2Count
+          - measure_0_payload_RTL2Count
+          - measure_0_payload_LTR3Count
+          - measure_0_payload_RTL3Count
+        jolt_normalizer:
+          $ref: >-
+            #/x-AlmavivA/normalization/joltTransformers/jolt_a2a_vehicles_treviso
+      mapping_radar_contaveicoli_treviso:
+        message_schema:
+          $ref: '#/components/messages/radarContaveicoliTrevisoEventOccurred'
+        filter_parameters: {}
+        split_parameters:
+          - - data_rx_cnt_unit
+            - data_rx_cnt
+            - data_rx_avg
+            - data_rx_avg_unit
+            - etichetta_dx
+          - - data_lx_cnt_unit
+            - data_lx_cnt
+            - data_lx_avg
+            - data_lx_avg_unit
+            - etichetta_lx
+        jolt_normalizer:
+          $ref: >-
+            #/x-AlmavivA/normalization/joltTransformers/jolt_radar_contaveicoli_treviso
+      mapping_radar_contaveicoli_montebelluna:
+        message_schema:
+          $ref: '#/components/messages/radarContaveicoliMontebellunaEventOccurred'
+        filter_parameters: {}
+        split_parameters:
+          - - data_rx_cnt_unit
+            - data_rx_cnt
+            - data_rx_avg
+            - data_rx_avg_unit
+            - etichetta_dx
+          - - data_lx_cnt_unit
+            - data_lx_cnt
+            - data_lx_avg
+            - data_lx_avg_unit
+            - etichetta_lx
+        jolt_normalizer: 
+          $ref: >-
+            #/x-AlmavivA/normalization/joltTransformers/jolt_radar_contaveicoli_montebelluna
+    aggregation:
+      aggregation_radar_contaveicoli_padova:
+        aggregationNeeded: false
+        timeframe: 0
+      aggregation_galileo_vehicles_verona:
+        aggregationNeeded: false
+        timeframe: 0
+      aggregation_radar_contaveicoli_vicenza:
+        aggregationNeeded: false
+        timeframe: 0
+      aggregation_a2a_vehicles_treviso:
+        aggregationNeeded: false
+        timeframe: 0
+      aggregation_radar_contaveicoli_treviso:
+        aggregationNeeded: false
+        timeframe: 0
+      aggregation_radar_contaveicoli_montebelluna:
+        aggregationNeeded: false
+        timeframe: 0
+  bigdata: null
+  gis:
+    incoming-data-channel:
+      type: object
+      id: gis_radar_padova_consumer
+      $ref: '#/channels/radar_contaveicoli_padova.{radarId}.event'
+    etl-strategy:
+      id: gis_radar_padova_etl
+      epsg_code: 4326
+      processing:
+        geocoding:
+          description: >-
+            Geocoding logic description (Ex. find coordinates from street
+            address)
+          needed: true 
+          processor:
+            fullQualifiedClassName: null
+        reverse-geocoding:
+          description: >-
+            Reverse Geocoding logic description(Ex. finding street address from
+            coordinates)
+          needed: false
+          processor:
+            fullQualifiedClassName: null
+      target-entity:
+        name: radar_veicolari
+        description: descrizione della entita gestita dalla strategia
+        DDL: >
+          CREATE TABLE public.telecamere_statica ( data_inizio timestamp NOT
+          NULL, fid varchar(255) NOT NULL, cespite varchar(255) NULL,
+          cod_armadio varchar(255) NULL, cod_istat_comune varchar(255) NOT NULL,
+          cod_via int8 NULL, codice varchar(255) NOT NULL, data_fine timestamp
+          NULL, direzione_puntamento varchar(255) NULL, direzioni_supportate
+          varchar(255) NULL, geom geometry NOT NULL, indirizzo varchar(255)
+          NULL, note varchar(255) NULL, num_corsie_per_dir int4 NULL, quartiere
+          varchar(255) NULL, scopo varchar(255) NULL, stato int8 NULL,
+          tipo_sensore varchar(255) NULL, via varchar(255) NULL, ztl int8 NULL,
+          device_manager_url varchar(2000) NULL, speed_enabled bool NULL,
+          descrizione_direzione varchar(2048) NULL, etichetta varchar(255) NULL,
+          CONSTRAINT telecamere_statica_pkey PRIMARY KEY (data_inizio, fid));
+    publishing:
+      servers:
+        collaudo:
+          url: https://geopublisher-mydata.collaudo.regione.veneto.it/geoserver
+          protocol: REST
+          description: nodi del middleware GIS di Collaudo
+          security:
+            - saslScram: []
+        produzione:
+          url: https://geopublisher-mydata.regione.veneto.it/geoserver
+          protocol: REST
+          description: nodi del middleware GIS di Produzione
+          security:
+            - saslScram: []
+      layer:
+        name: telecamere
+        sqlview: >
+          SELECT data_inizio, fid, cespite, cod_armadio, cod_istat_comune,
+          cod_via, codice, data_fine, direzione_puntamento,
+          direzioni_supportate, geom, indirizzo, note, num_corsie_per_dir,
+          quartiere, scopo, stato, (
+            CASE when fid is not null
+            and (
+              fid like 'TCR-363732326f30750c'
+              or fid like 'TCR-363732326130730c'
+              or fid like 'TCR-3932303170308310'
+              or fid like 'TCR-3932303157308505'
+              or fid like 'TCR-393230316e308305'
+              or fid like 'TCR-343531315a30810a'
+              or fid like 'TCR-363732324D30780C'
+              or fid like 'TCR-323334307D308617'
+              or fid like 'TCR-323334306F307217'
+            ) then 'Sensore conta traffico' else tipo_sensore END
+          ) via, ztl, device_manager_url, speed_enabled, descrizione_direzione,
+          etichetta FROM telecamere_statica
+        id-fields: fid,data_inizio
+      style:
+        name: telecamere_style
+        description: Questo tematismo rappresenta i radar contaveicoli
+        type: SLD
+        example-data:
+          wfs:
+            base-url: https://geopublisher-mydata.regione.veneto.it/geoserver/mydata_ws/ows?
+            version: 1.1.0
+            type-name: mydata_ws:telecamere_statica
+            projection: EPSG:4326
+          inline-definition: |
+            {"type":"FeatureCollection","features":[{"type":"Feature","id":"1","geometry":{"type":"Point","coordinates":[12.2366,45.6686]},"geometry_name":"geom"},{"type":"Feature","id":"2","geometry":{"type":"MultiLineString","coordinates":[[[11.8438797,45.4341655],[11.8741608,45.4384537],[11.9050598,45.4363337],[11.9321137,45.4248653],[11.9384308,45.40761],[11.9392548,45.3913138],[11.9228439,45.3753506],[11.888031,45.3717329],[11.8549347,45.3742412],[11.8258209,45.3872631],[11.8155213,45.4060673],[11.8179932,45.420817],[11.8438797,45.4341655]]]},"geometry_name":"geom"},{"type":"Feature","id":"3","geometry":{"type":"Polygon","coordinates":[[[11.0939943,45.1773903],[11.1049807,45.158026],[12.6595461,44.6834962],[12.4508059,45.6440001],[11.3631594,45.6977392],[11.0939943,45.1773903]]]},"geometry_name":"geom"}]}
+        template-reference: null
+        inline-definition: >
+          <?xml version="1.0" encoding="ISO-8859-1"?>
+          <StyledLayerDescriptor version="1.0.0" xsi:schemaLocation="http://www.opengis.net/sld StyledLayerDescriptor.xsd" xmlns="http://www.opengis.net/sld" xmlns:ogc="http://www.opengis.net/ogc"
+                                xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <NamedLayer>
+              <Name>Tele_clustered</Name>
+              <UserStyle>
+                <Title>Telecamere</Title>
+                <FeatureTypeStyle>
+                  <Transformation>
+                    <ogc:Function name="vec:PointStacker">
+                      <ogc:Function name="parameter">
+                        <ogc:Literal>data</ogc:Literal>
+                      </ogc:Function>
+                      <ogc:Function name="parameter">
+                        <ogc:Literal>cellSize</ogc:Literal>
+                        <ogc:Literal>50</ogc:Literal>
+                      </ogc:Function>
+                      <ogc:Function name="parameter">
+                        <ogc:Literal>outputBBOX</ogc:Literal>
+                        <ogc:Function name="env">
+                          <ogc:Literal>wms_bbox</ogc:Literal>
+                        </ogc:Function>
+                      </ogc:Function>
+                      <ogc:Function name="parameter">
+                        <ogc:Literal>outputWidth</ogc:Literal>
+                        <ogc:Function name="env">
+                          <ogc:Literal>wms_width</ogc:Literal>
+                        </ogc:Function>
+                      </ogc:Function>
+                      <ogc:Function name="parameter">
+                        <ogc:Literal>outputHeight</ogc:Literal>
+                        <ogc:Function name="env">
+                          <ogc:Literal>wms_height</ogc:Literal>
+                        </ogc:Function>
+                      </ogc:Function>
+                      <ogc:Function name="parameter">
+                        <ogc:Literal>preserveLocation</ogc:Literal>
+                        <ogc:Literal>Superimposed</ogc:Literal>
+                      </ogc:Function>
+                    </ogc:Function>
+                  </Transformation>
+                  <Rule>
+                    <Name>TeleClustered point</Name>
+                    <MinScaleDenominator>1000</MinScaleDenominator>               	
+                    <MaxScaleDenominator>10000000</MaxScaleDenominator>
+                    <PointSymbolizer>
+                      <Graphic>
+                        <ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+                          <OnlineResource xlink:type="simple" xlink:href="ic_traffic_green.svg" />
+                          <Format>image/svg+xml</Format>
+                        </ExternalGraphic>
+                        <Size>20</Size>
+
+                      </Graphic>
+                    </PointSymbolizer>
+                  </Rule>
+                  <Rule>
+                    
+                    <ogc:Filter>
+                      <ogc:PropertyIsGreaterThan> 
+                        <ogc:PropertyName>count</ogc:PropertyName>
+                        <ogc:Literal>1</ogc:Literal>
+                      </ogc:PropertyIsGreaterThan>
+                    </ogc:Filter>
+                    
+                    <TextSymbolizer>
+                      
+                      <Label>
+                        <ogc:PropertyName>count</ogc:PropertyName>
+                      </Label>
+                      <Font>
+                        <CssParameter name="font-family">Arial</CssParameter>
+                        <CssParameter name="font-size">12</CssParameter>
+                        <CssParameter name="font-weight">bold</CssParameter>
+                      </Font>
+                      <LabelPlacement>
+                        
+                        <PointPlacement>
+                          
+                          <AnchorPoint>
+                            <AnchorPointX>0.5</AnchorPointX>
+                            <AnchorPointY>-1.3</AnchorPointY>
+                          </AnchorPoint>
+                        </PointPlacement>
+                      </LabelPlacement>
+                      <Halo>
+                        <Radius>2</Radius>
+                        <Fill>
+                          <CssParameter name="fill">#AA0000</CssParameter>
+                          <CssParameter name="fill-opacity">0.9</CssParameter>
+                        </Fill>
+                      </Halo>
+                      <Fill>
+                        <CssParameter name="fill">#FFFFFF</CssParameter>
+                        <CssParameter name="fill-opacity">1.0</CssParameter>
+                      </Fill>
+                    </TextSymbolizer>
+                  </Rule>
+                </FeatureTypeStyle>
+                <FeatureTypeStyle>
+                  
+                  <Rule>
+                    <Name>TeleDetailed point</Name>
+                    <MaxScaleDenominator>1000</MaxScaleDenominator>
+                    <PointSymbolizer>
+                      <Graphic>
+                        <ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+                          <OnlineResource xlink:type="simple" xlink:href="ic_traffic_green.svg" />
+                          <Format>image/svg+xml</Format>
+                        </ExternalGraphic>
+                        <Size>20</Size>
+
+                      </Graphic>
+                    </PointSymbolizer>
+                  </Rule>        
+                </FeatureTypeStyle>
+              </UserStyle>
+            </NamedLayer>
+          </StyledLayerDescriptor>

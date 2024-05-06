@@ -1440,7 +1440,7 @@ x-AlmavivA:
                           <OnlineResource xlink:type="simple" xlink:href="ic_traffic_green.svg" />
                           <Format>image/svg+xml</Format>
                         </ExternalGraphic>
-                        <Size>20</Size>
+                        <Size>21</Size>
 
                       </Graphic>
                     </PointSymbolizer>

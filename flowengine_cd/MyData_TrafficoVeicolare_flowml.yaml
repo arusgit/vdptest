@@ -1353,30 +1353,314 @@ x-AlmavivA:
           description: nodi del middleware GIS di Produzione
           security:
             - saslScram: []
+      workspace: 
+        name: mydata_ws
+        action: APPLY
+      datastore: 
+        name: mydata_ds_public
+        action: APPLY
+        inline-definition: >
+          {
+            "dataStore": {
+                "name": "mydata_ds_public",
+                "type": "PostGIS",
+                "enabled": true,
+                "connectionParameters": {
+                    "entry": [
+                        {
+                            "@key": "schema",
+                            "$": "public"
+                        },
+                        {
+                            "@key": "Evictor run periodicity",
+                            "$": "300"
+                        },
+                        {
+                            "@key": "Max open prepared statements",
+                            "$": "50"
+                        },
+                        {
+                            "@key": "encode functions",
+                            "$": "true"
+                        },
+                        {
+                            "@key": "Batch insert size",
+                            "$": "1"
+                        },
+                        {
+                            "@key": "preparedStatements",
+                            "$": "false"
+                        },
+                        {
+                            "@key": "database",
+                            "$": "mydatagis"
+                        },
+                        {
+                            "@key": "host",
+                            "$": "192.168.22.18"
+                        },
+                        {
+                            "@key": "Loose bbox",
+                            "$": "true"
+                        },
+                        {
+                            "@key": "SSL mode",
+                            "$": "DISABLE"
+                        },
+                        {
+                            "@key": "Estimated extends",
+                            "$": "true"
+                        },
+                        {
+                            "@key": "fetch size",
+                            "$": "1000"
+                        },
+                        {
+                            "@key": "Expose primary keys",
+                            "$": "true"
+                        },
+                        {
+                            "@key": "validate connections",
+                            "$": "true"
+                        },
+                        {
+                            "@key": "Support on the fly geometry simplification",
+                            "$": "true"
+                        },
+                        {
+                            "@key": "Connection timeout",
+                            "$": "20"
+                        },
+                        {
+                            "@key": "create database",
+                            "$": "false"
+                        },
+                        {
+                            "@key": "port",
+                            "$": "12323"
+                        },
+                        {
+                            "@key": "passwd",
+                            "$": "crypt2:MvK9fW3lFBWipZUQ8gLlynLTdcYO4mEEVzD+vpxtU3g5JI2IyNdWqPuYmBNqjIC0"
+                        },
+                        {
+                            "@key": "min connections",
+                            "$": "1"
+                        },
+                        {
+                            "@key": "dbtype",
+                            "$": "postgis"
+                        },
+                        {
+                            "@key": "namespace",
+                            "$": "http://mydata_ws.local"
+                        },
+                        {
+                            "@key": "max connections",
+                            "$": "10"
+                        },
+                        {
+                            "@key": "Evictor tests per run",
+                            "$": "3"
+                        },
+                        {
+                            "@key": "Test while idle",
+                            "$": "true"
+                        },
+                        {
+                            "@key": "user",
+                            "$": "mydatagis"
+                        },
+                        {
+                            "@key": "Max connection idle time",
+                            "$": "300"
+                        }
+                    ]
+                },
+                "_default": false
+            }
+              
+          }
       layer:
         name: telecamere
-        sqlview: >
-          SELECT data_inizio, fid, cespite, cod_armadio, cod_istat_comune,
-          cod_via, codice, data_fine, direzione_puntamento,
-          direzioni_supportate, geom, indirizzo, note, num_corsie_per_dir,
-          quartiere, scopo, stato, (
-            CASE when fid is not null
-            and (
-              fid like 'TCR-363732326f30750c'
-              or fid like 'TCR-363732326130730c'
-              or fid like 'TCR-3932303170308310'
-              or fid like 'TCR-3932303157308505'
-              or fid like 'TCR-393230316e308305'
-              or fid like 'TCR-343531315a30810a'
-              or fid like 'TCR-363732324D30780C'
-              or fid like 'TCR-323334307D308617'
-              or fid like 'TCR-323334306F307217'
-            ) then 'Sensore conta traffico' else tipo_sensore END
-          ) via, ztl, device_manager_url, speed_enabled, descrizione_direzione,
-          etichetta FROM telecamere_statica
-        id-fields: fid,data_inizio
+        action: APPLY
+        in-linedefintion: >
+          <?xml version="1.0" encoding="UTF-8"?>
+            <featureType>
+                <name>parcheggi_from_stalli</name>
+                <nativeName>parcheggi_from_stalli</nativeName>
+                <title>parcheggi_from_stalli</title>
+                <keywords>
+                    <string>features</string>
+                    <string>parcheggi_from_stalli</string>
+                </keywords>
+                <nativeCRS>GEOGCS["WGS 84", DATUM["World Geodetic System 1984", SPHEROID["WGS 84", 6378137.0, 298.257223563, AUTHORITY["EPSG","7030"]], AUTHORITY["EPSG","6326"]], PRIMEM["Greenwich", 0.0, AUTHORITY["EPSG","8901"]], UNIT["degree", 0.017453292519943295], AXIS["Geodetic longitude", EAST], AXIS["Geodetic latitude", NORTH], AUTHORITY["EPSG","4326"]]</nativeCRS>
+                <srs>EPSG:4326</srs>
+                <nativeBoundingBox>
+                    <minx>11.865898</minx>
+                    <maxx>12.254493</maxx>
+                    <miny>45.39642</miny>
+                    <maxy>45.669714899141226</maxy>
+                    <crs>EPSG:4326</crs>
+                </nativeBoundingBox>
+                <latLonBoundingBox>
+                    <minx>11.865898</minx>
+                    <maxx>12.254493</maxx>
+                    <miny>45.39642</miny>
+                    <maxy>45.669714899141226</maxy>
+                    <crs>EPSG:4326</crs>
+                </latLonBoundingBox>
+                <projectionPolicy>FORCE_DECLARED</projectionPolicy>
+                <enabled>true</enabled>
+                <metadata>
+                    <entry key="elevation">
+                        <dimensionInfo>
+                            <enabled>false</enabled>
+                        </dimensionInfo>
+                    </entry>
+                    <entry key="JDBC_VIRTUAL_TABLE">
+                        <virtualTable>
+                            <name>parcheggi_from_stalli</name>
+                            <sql>   WITH aggregated AS (
+                                SELECT
+                                sps.parking_id,
+                                sps.nome_parcheggio,
+                                sps.cod_istat_comune,
+                                St_centroid(ST_Collect(sps.geom)) AS geom,
+                                ST_ConvexHull(ST_Collect(sps.geom)) AS polygeom,
+                                sps.tipologia,
+                                CASE
+                                WHEN BOOL_OR(sps.stato IS NULL) THEN SUM(spt.posti_disponibili)
+                                ELSE COUNT(*) FILTER (WHERE sps.stato = false)
+                                END AS posti_liberi,
+                                MAX(sps.posti_totali) AS posti_totali
+                                FROM
+                                public.stalli_parcheggi_statica sps
+                                LEFT JOIN
+                                public.stalli_parcheggi_telemetria spt
+                                ON
+                                sps.cod_istat_comune = spt.cod_istat_comune AND sps.fid = spt.id_stallo
+                                WHERE
+                                sps.sensore = true
+                                AND sps.parking_id IS NOT NULL
+                                GROUP BY
+                                sps.parking_id,
+                                sps.nome_parcheggio,
+                                sps.cod_istat_comune,
+                                sps.tipologia
+                                )
+                                SELECT
+                                parking_id,
+                                nome_parcheggio,
+                                cod_istat_comune,
+                                geom,
+                                polygeom,
+                                tipologia,
+                                CASE
+                                WHEN posti_liberi IS NULL THEN 'N/D' /* handle the case where posti_liberi is NULL */
+                                ELSE posti_liberi || '/' || posti_totali
+                                END AS "posti_liberi_su_posti_totali",
+                                CASE
+                                WHEN posti_totali = 0 THEN '0%'
+                                WHEN posti_liberi IS NULL THEN 'N/D' /* handle the case where posti_liberi is NULL */
+                                WHEN posti_liberi = 0 THEN '100%'
+                                WHEN posti_liberi > posti_totali THEN '0%' -- edge case
+                                ELSE CAST(100 - (posti_liberi * 100 / posti_totali) AS VARCHAR) || '%'
+                                END AS tasso_occupazione
+                                FROM
+                                aggregated</sql>
+                            <escapeSql>false</escapeSql>
+                            <geometry>
+                                <name>polygeom</name>
+                                <type>Geometry</type>
+                                <srid>4326</srid>
+                            </geometry>
+                            <geometry>
+                                <name>geom</name>
+                                <type>Geometry</type>
+                                <srid>4326</srid>
+                            </geometry>
+                        </virtualTable>
+                    </entry>
+                    <entry key="time">
+                        <dimensionInfo>
+                            <enabled>false</enabled>
+                        </dimensionInfo>
+                    </entry>
+                    <entry key="cachingEnabled">false</entry>
+                </metadata>
+                <serviceConfiguration>false</serviceConfiguration>
+                <simpleConversionEnabled>false</simpleConversionEnabled>
+                <maxFeatures>0</maxFeatures>
+                <numDecimals>0</numDecimals>
+                <padWithZeros>false</padWithZeros>
+                <forcedDecimal>false</forcedDecimal>
+                <overridingServiceSRS>false</overridingServiceSRS>
+                <skipNumberMatched>false</skipNumberMatched>
+                <circularArcPresent>false</circularArcPresent>
+                <attributes>
+                    <attribute>
+                        <name>parking_id</name>
+                        <minOccurs>0</minOccurs>
+                        <maxOccurs>1</maxOccurs>
+                        <nillable>true</nillable>
+                        <binding>java.lang.String</binding>
+                    </attribute>
+                    <attribute>
+                        <name>nome_parcheggio</name>
+                        <minOccurs>0</minOccurs>
+                        <maxOccurs>1</maxOccurs>
+                        <nillable>true</nillable>
+                        <binding>java.lang.String</binding>
+                    </attribute>
+                    <attribute>
+                        <name>cod_istat_comune</name>
+                        <minOccurs>1</minOccurs>
+                        <maxOccurs>1</maxOccurs>
+                        <nillable>false</nillable>
+                        <binding>java.lang.String</binding>
+                    </attribute>
+                    <attribute>
+                        <name>geom</name>
+                        <minOccurs>0</minOccurs>
+                        <maxOccurs>1</maxOccurs>
+                        <nillable>true</nillable>
+                        <binding>org.locationtech.jts.geom.Geometry</binding>
+                    </attribute>
+                    <attribute>
+                        <name>polygeom</name>
+                        <minOccurs>0</minOccurs>
+                        <maxOccurs>1</maxOccurs>
+                        <nillable>true</nillable>
+                        <binding>org.locationtech.jts.geom.Geometry</binding>
+                    </attribute>
+                    <attribute>
+                        <name>tipologia</name>
+                        <minOccurs>0</minOccurs>
+                        <maxOccurs>1</maxOccurs>
+                        <nillable>true</nillable>
+                        <binding>java.lang.String</binding>
+                    </attribute>
+                    <attribute>
+                        <name>posti_liberi_su_posti_totali</name>
+                        <minOccurs>0</minOccurs>
+                        <maxOccurs>1</maxOccurs>
+                        <nillable>true</nillable>
+                        <binding>java.lang.String</binding>
+                    </attribute>
+                    <attribute>
+                        <name>tasso_occupazione</name>
+                        <minOccurs>0</minOccurs>
+                        <maxOccurs>1</maxOccurs>
+                        <nillable>true</nillable>
+                        <binding>java.lang.String</binding>
+                    </attribute>
+                </attributes>
+            </featureType>
+
       style:
         name: telecamere_style
+        action: APPLY
         description: Questo tematismo rappresenta i radar contaveicoli
         type: SLD
         example-data:
@@ -1432,7 +1716,7 @@ x-AlmavivA:
                   </Transformation>
                   <Rule>
                     <Name>TeleClustered point</Name>
-                    <MinScaleDenominator>1000</MinScaleDenominator>               	
+                    <MinScaleDenominator>1000</MinScaleDenominator>                 
                     <MaxScaleDenominator>10000000</MaxScaleDenominator>
                     <PointSymbolizer>
                       <Graphic>

@@ -1327,7 +1327,7 @@ x-AlmavivA:
         name: radar_veicolari
         description: descrizione della entita gestita dalla strategia
         DDL: >
-          CREATE TABLE public.telecamere_statica ( data_inizio timestamp NOT
+          CREATE OR REPLACE TABLE public.telecamere_statica ( data_inizio timestamp NOT
           NULL, fid varchar(255) NOT NULL, cespite varchar(255) NULL,
           cod_armadio varchar(255) NULL, cod_istat_comune varchar(255) NOT NULL,
           cod_via int8 NULL, codice varchar(255) NOT NULL, data_fine timestamp

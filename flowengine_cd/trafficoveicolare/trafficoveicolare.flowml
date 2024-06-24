@@ -1483,7 +1483,7 @@ x-AlmavivA:
           }
       layer:
         name: telecamere
-        action: APPLY
+        action: IGNORE
         in-linedefintion: >
           <?xml version="1.0" encoding="UTF-8"?>
             <featureType>
@@ -1660,7 +1660,7 @@ x-AlmavivA:
 
       style:
         name: telecamere_style
-        action: APPLY
+        action: IGNORE
         description: Questo tematismo rappresenta i radar contaveicoli
         type: SLD
         example-data:

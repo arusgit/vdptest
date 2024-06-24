@@ -1397,7 +1397,7 @@ x-AlmavivA:
                         },
                         {
                             "@key": "host",
-                            "$": "192.168.22.18"
+                            "$": "gis-service-postgresql"
                         },
                         {
                             "@key": "Loose bbox",
@@ -1437,11 +1437,11 @@ x-AlmavivA:
                         },
                         {
                             "@key": "port",
-                            "$": "12323"
+                            "$": "5432"
                         },
                         {
                             "@key": "passwd",
-                            "$": "crypt2:MvK9fW3lFBWipZUQ8gLlynLTdcYO4mEEVzD+vpxtU3g5JI2IyNdWqPuYmBNqjIC0"
+                            "$": "postgres"
                         },
                         {
                             "@key": "min connections",
@@ -1469,7 +1469,7 @@ x-AlmavivA:
                         },
                         {
                             "@key": "user",
-                            "$": "mydatagis"
+                            "$": "postgres"
                         },
                         {
                             "@key": "Max connection idle time",

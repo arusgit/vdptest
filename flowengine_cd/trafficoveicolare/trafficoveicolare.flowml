@@ -1355,10 +1355,10 @@ x-AlmavivA:
             - saslScram: []
       workspace: 
         name: mydata_ws
-        action: APPLY
+        action: IGNORE
       datastore: 
         name: mydata_ds_public
-        action: APPLY
+        action: IGNORE
         inline-definition: >
           {
             "dataStore": {
@@ -1483,7 +1483,7 @@ x-AlmavivA:
           }
       layer:
         name: telecamere
-        action: IGNORE
+        action: APPLY
         in-linedefintion: >
           <?xml version="1.0" encoding="UTF-8"?>
             <featureType>

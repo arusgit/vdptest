@@ -1484,7 +1484,7 @@ x-AlmavivA:
       layer:
         name: telecamere
         action: APPLY
-        in-linedefintion: >
+        inline-definition: >
           <?xml version="1.0" encoding="UTF-8"?>
             <featureType>
                 <name>parcheggi_from_stalli</name>

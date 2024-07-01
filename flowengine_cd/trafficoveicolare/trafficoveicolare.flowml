@@ -1397,7 +1397,7 @@ x-AlmavivA:
                         },
                         {
                             "@key": "host",
-                            "$": "postgres"
+                            "$": "gis-service-postgresql"
                         },
                         {
                             "@key": "Loose bbox",
@@ -1441,7 +1441,7 @@ x-AlmavivA:
                         },
                         {
                             "@key": "passwd",
-                            "$": "geoserver"
+                            "$": "flowcrypt:+bGBDFhW1b0sMrrSIlqGHw=="
                         },
                         {
                             "@key": "min connections",
@@ -1482,9 +1482,9 @@ x-AlmavivA:
               
           }
       layer:
-        name: telecamere
-        action: IGNORE
-        in-linedefintion: >
+        name: parcheggi_from_stalli
+        action: APPLY
+        inline-definition: >
           <?xml version="1.0" encoding="UTF-8"?>
             <featureType>
                 <name>parcheggi_from_stalli</name>

@@ -1355,10 +1355,10 @@ x-AlmavivA:
             - saslScram: []
       workspace: 
         name: mydata_ws
-        action: APPLY
+        action: IGNORE
       datastore: 
         name: mydata_ds_public
-        action: APPLY
+        action: IGNORE
         inline-definition: >
           {
             "dataStore": {
@@ -1393,7 +1393,7 @@ x-AlmavivA:
                         },
                         {
                             "@key": "database",
-                            "$": "mydatagis"
+                            "$": "postgres"
                         },
                         {
                             "@key": "host",
@@ -1721,7 +1721,7 @@ x-AlmavivA:
                     <PointSymbolizer>
                       <Graphic>
                         <ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
-                          <OnlineResource xlink:type="simple" xlink:href="ic_traffic_green.svg" />
+                          <OnlineResource xlink:type="simple" xlink:href="icons8-buffalo-40.png" />
                           <Format>image/svg+xml</Format>
                         </ExternalGraphic>
                         <Size>21</Size>

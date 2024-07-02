@@ -1326,6 +1326,7 @@ x-AlmavivA:
       target-entity:
         name: radar_veicolari
         description: descrizione della entita gestita dalla strategia
+        action: APPLY
         datasource:          
           host: gis-service-postgresql
           port: 5432

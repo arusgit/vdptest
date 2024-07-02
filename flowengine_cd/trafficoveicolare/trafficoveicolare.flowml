@@ -1326,6 +1326,13 @@ x-AlmavivA:
       target-entity:
         name: radar_veicolari
         description: descrizione della entita gestita dalla strategia
+        datasource:          
+          host: gis-service-postgresql
+          port: 5432
+          dbName: postgres
+          userName: postgres
+          password: flowcrypt:+bGBDFhW1b0sMrrSIlqGHw==
+          schema: public
         DDL: >
           CREATE TABLE IF NOT EXISTS public.telecamere_statica ( data_inizio timestamp NOT
           NULL, fid varchar(255) NOT NULL, cespite varchar(255) NULL,

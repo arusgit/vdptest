@@ -1335,18 +1335,37 @@ x-AlmavivA:
           password: flowcrypt:+bGBDFhW1b0sMrrSIlqGHw==
           schema: public
         DDL: >
-          CREATE TABLE IF NOT EXISTS public.telecamere_statica ( data_inizio timestamp NOT
-          NULL, fid varchar(255) NOT NULL, cespite varchar(255) NULL,
-          cod_armadio varchar(255) NULL, cod_istat_comune varchar(255) NOT NULL,
-          cod_via int8 NULL, codice varchar(255) NOT NULL, data_fine timestamp
-          NULL, direzione_puntamento varchar(255) NULL, direzioni_supportate
-          varchar(255) NULL, geom geometry NOT NULL, indirizzo varchar(255)
-          NULL, note varchar(255) NULL, num_corsie_per_dir int4 NULL, quartiere
-          varchar(255) NULL, scopo varchar(255) NULL, stato int8 NULL,
-          tipo_sensore varchar(255) NULL, via varchar(255) NULL, ztl int8 NULL,
-          device_manager_url varchar(2000) NULL, speed_enabled bool NULL,
-          descrizione_direzione varchar(2048) NULL, etichetta varchar(255) NULL,
-          CONSTRAINT telecamere_statica_pkey PRIMARY KEY (data_inizio, fid));
+          CREATE TABLE public.stalli_parcheggi_statica (
+            cod_istat_comune varchar(255) NOT NULL,
+            data_inizio timestamp NOT NULL,
+            fid varchar(255) NOT NULL,
+            data_fine timestamp NULL,
+            descrizione varchar(255) NULL,
+            descrizione_tipologia_stallo varchar(255) NULL,
+            dimensione varchar(255) NULL,
+            geom geometry NOT NULL,
+            latitudine float8 NULL,
+            longitudine float8 NULL,
+            nome_parcheggio varchar(255) NULL,
+            parking_id varchar(255) NULL,
+            posti_totali int4 NULL,
+            sensore bool NULL,
+            stato bool NULL,
+            tipologia varchar(255) NULL,
+            ultima_misurazione timestamp NULL,
+            data_ricezione timestamp NULL,
+            etichetta varchar(255) NULL,
+            note varchar(255) NULL,
+            CONSTRAINT stalli_parcheggi_statica_pkey PRIMARY KEY (cod_istat_comune, data_inizio, fid)
+          );
+
+
+          CREATE TABLE public.stalli_parcheggi_telemetria (
+            cod_istat_comune varchar(255) NOT NULL,
+            id_stallo varchar(255) NOT NULL,
+            posti_disponibili int4 NULL,
+            CONSTRAINT stalli_parcheggi_telemetria_pkey PRIMARY KEY (cod_istat_comune, id_stallo)
+          );
     publishing:
       servers:
         collaudo:
